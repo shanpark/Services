@@ -4,6 +4,7 @@ import ga.shanpark.services.signal.AtomicSignal
 import ga.shanpark.services.task.Task
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.atomic.AtomicBoolean
 
 class CoroutineService(private val coroutineScope: CoroutineScope): Service {
@@ -14,12 +15,7 @@ class CoroutineService(private val coroutineScope: CoroutineScope): Service {
     override fun start(task: Task) {
         if (running.compareAndSet(false, true)) {
             coroutineScope.launch {
-                mutex.lock()
-                try {
-                    run(task)
-                } finally {
-                    mutex.unlock()
-                }
+                mutex.withLock { run(task) }
             }
         } else {
             throw IllegalStateException("The service has already been started.")
@@ -37,12 +33,10 @@ class CoroutineService(private val coroutineScope: CoroutineScope): Service {
     override fun await(millis: Long) {
         runBlocking { // 다른 coroutine에서 호출될 것이다.
             if (millis == 0L) {
-                mutex.lock()
-                mutex.unlock()
+                mutex.withLock {}
             } else {
                 withTimeoutOrNull(millis) {
-                    mutex.lock()
-                    mutex.unlock()
+                    mutex.withLock {}
                 }
             }
         }
