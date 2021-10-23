@@ -1,12 +1,14 @@
-import ga.shanpark.services.CoroutineService
 import ga.shanpark.services.ExectrService
 import ga.shanpark.services.SyncService
 import ga.shanpark.services.ThreadService
+import ga.shanpark.services.coroutine.CoTask
+import ga.shanpark.services.coroutine.CoroutineService
 import ga.shanpark.services.signal.AtomicSignal
 import ga.shanpark.services.signal.Signal
 import ga.shanpark.services.task.Task
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -27,6 +29,25 @@ internal class TestTask: Task {
     }
 
     override fun uninit() {
+        value = 200
+    }
+}
+
+internal class TestCoTask: CoTask {
+    var value: Int = 0
+
+    override suspend fun init() {
+        value = 100
+    }
+
+    override suspend fun run(stopSignal: Signal) {
+        while (!stopSignal.isSignalled()) {
+            delay(1000)
+            value++
+        }
+    }
+
+    override suspend fun uninit() {
         value = 200
     }
 }
@@ -59,6 +80,8 @@ internal class ServiceTest {
 
         Thread.sleep(100)
         assertThat(signal.isSignalled()).isFalse
+
+        service.stopAndAwait() // 에러없이 즉시 리턴되어야 함.
     }
 
     @Test
@@ -95,6 +118,8 @@ internal class ServiceTest {
 
         Thread.sleep(100)
         assertThat(signal.isSignalled()).isFalse
+
+        service.stopAndAwait() // 에러없이 즉시 리턴되어야 함.
     }
 
     @Test
@@ -133,14 +158,16 @@ internal class ServiceTest {
         Thread.sleep(100)
         assertThat(signal.isSignalled()).isFalse
 
-        executorService.shutdown()
+        service.await(0) // 에러없이 즉시 리턴되어야 함.
+
+        service.stopAndAwait() // 에러없이 즉시 리턴되어야 함.
     }
 
     @DelicateCoroutinesApi
     @Test
     @DisplayName("CoroutineService 테스트")
     internal fun coroutineServiceTest() {
-        val task = TestTask()
+        val task = TestCoTask()
         val service = CoroutineService(GlobalScope)
         val signal = AtomicSignal()
 
@@ -177,5 +204,7 @@ internal class ServiceTest {
 
         Thread.sleep(100)
         assertThat(signal.isSignalled()).isFalse
+
+        service.stopAndAwait() // 에러없이 즉시 리턴되어야 함.
     }
 }

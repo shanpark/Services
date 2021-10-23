@@ -9,20 +9,18 @@ import java.util.concurrent.atomic.AtomicReference
 
 /**
  * java의 concurrent 패키지에 Executor를 이용하는 service 클래스이다.
+ * ExecutorService의 thread에서 task를 수행한다.
  *
- * concurrent 패키지에서 제공하는 ExecutorService와 이름이 중복되기 때문에 의도적으로 ExectrService라고 명명함.
+ * 동작 자체는 ThreadService와 동일하다.
+ * concurrent 패키지에서 제공하는 ExecutorService와 이름이 중복되기 때문에 의도적으로 ExectrService라고 명명하였다.
  */
 class ExectrService(private val executor: ExecutorService) : Service {
-    private val stopSignal = AtomicSignal() // stop을 요청하는 signal일 뿐이다.
+    override val stopSignal = AtomicSignal() // stop을 요청하는 signal일 뿐이다.
     private val future = AtomicReference<Future<*>>()
 
     override fun start(task: Task) {
         if (!future.compareAndSet(null, executor.submit { run(task) }))
             throw IllegalStateException("The service has already been started.")
-    }
-
-    override fun stop() {
-        stopSignal.signal() // stop을 요청하는 signal을 설정한다. 이후 service의 실행 종료는 task의 구현에 따라 결정된다.
     }
 
     override fun isRunning(): Boolean {

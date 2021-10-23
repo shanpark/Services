@@ -4,8 +4,14 @@ import ga.shanpark.services.signal.AtomicSignal
 import ga.shanpark.services.task.Task
 import java.util.concurrent.atomic.AtomicBoolean
 
+/**
+ * 핸재 thread에서 task를 실행하는 service이다. 일단 start()가 호출되면 service가 종료될 때까지 block된다.
+ *
+ * service가 스스로 작업을 끝내고 종료되거나 다른 스레드에서 stop()이 호출되어 service가 종료되면
+ * block되었던 스레드는 block이 해제된다.
+ */
 class SyncService: Service {
-    private val stopSignal = AtomicSignal() // stop을 요청하는 signal일 뿐이다.
+    override val stopSignal = AtomicSignal() // stop을 요청하는 signal일 뿐이다.
     private val running = AtomicBoolean(false)
 
     override fun start(task: Task) {
@@ -16,10 +22,6 @@ class SyncService: Service {
         } else {
             throw IllegalStateException("The service has already been started.")
         }
-    }
-
-    override fun stop() {
-        stopSignal.signal() // stop을 요청하는 signal을 설정한다. 이후 service의 실행 종료는 task의 구현에 따라 결정된다.
     }
 
     override fun isRunning(): Boolean {

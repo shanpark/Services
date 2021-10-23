@@ -4,8 +4,14 @@ import ga.shanpark.services.signal.AtomicSignal
 import ga.shanpark.services.task.Task
 import java.util.concurrent.atomic.AtomicReference
 
+/**
+ * 새로운 thread를 생성하여 그 thread에서 task를 수행한다.
+ *
+ * 서비스를 시작하면 매 번 새로운 thread를 생성하지만 한 service는 중첩해서 실행될 수 없기 떄문에
+ * Service가 실행되는 동안에는 1개의 thread만 존재한다.
+ */
 class ThreadService: Service {
-    private val stopSignal = AtomicSignal() // stop을 요청하는 signal일 뿐이다.
+    override val stopSignal = AtomicSignal() // stop을 요청하는 signal일 뿐이다.
     private val thread = AtomicReference<Thread>()
 
     override fun start(task: Task) {
@@ -13,10 +19,6 @@ class ThreadService: Service {
             thread.get().start()
         else
             throw IllegalStateException("The service has already been started.")
-    }
-
-    override fun stop() {
-        stopSignal.signal() // stop을 요청하는 signal을 설정한다. 이후 service의 실행 종료는 task의 구현에 따라 결정된다.
     }
 
     override fun isRunning(): Boolean {
