@@ -6,10 +6,9 @@ import ga.shanpark.services.coroutine.CoroutineService
 import ga.shanpark.services.signal.AtomicSignal
 import ga.shanpark.services.signal.Signal
 import ga.shanpark.services.task.Task
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Fail
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.util.concurrent.Executors
@@ -59,7 +58,7 @@ internal class ServiceTest {
     internal fun syncServiceTest() {
         val task = TestTask()
         val service = SyncService()
-        val signal = AtomicSignal()
+        val errorSignal = AtomicSignal()
 
         Thread { // 1.5초 뒤 stop을 요청하는 thread.
             Thread.sleep(1500)
@@ -70,7 +69,7 @@ internal class ServiceTest {
             Thread.sleep(500)
             service.await()
             if (service.isRunning())
-                signal.signal()
+                errorSignal.signal()
         }.start()
 
         service.start(task) // 실제 service가 시작되고 종료될 때 까지 block.
@@ -79,9 +78,14 @@ internal class ServiceTest {
         assertThat(task.value).isEqualTo(200)
 
         Thread.sleep(100)
-        assertThat(signal.isSignalled()).isFalse
+        assertThat(errorSignal.isSignalled()).isFalse
 
-        service.stopAndAwait() // 에러없이 즉시 리턴되어야 함.
+        try {
+            service.await(0) // 에러없이 즉시 리턴되어야 함.
+            service.stopAndAwait() // 에러없이 즉시 리턴되어야 함.
+        } catch(e: Exception) {
+            Fail.fail("stopAndWait() failed.")
+        }
     }
 
     @Test
@@ -89,7 +93,7 @@ internal class ServiceTest {
     internal fun threadServiceTest() {
         val task = TestTask()
         val service = ThreadService()
-        val signal = AtomicSignal()
+        val errorSignal = AtomicSignal()
 
         Thread { // 1.5초 뒤 stop을 요청하는 thread.
             Thread.sleep(1500)
@@ -100,7 +104,7 @@ internal class ServiceTest {
             Thread.sleep(500)
             service.await()
             if (service.isRunning())
-                signal.signal()
+                errorSignal.signal()
         }.start()
 
         service.start(task) // 실제 service 시작.
@@ -117,9 +121,14 @@ internal class ServiceTest {
         assertThat(task.value).isEqualTo(200)
 
         Thread.sleep(100)
-        assertThat(signal.isSignalled()).isFalse
+        assertThat(errorSignal.isSignalled()).isFalse
 
-        service.stopAndAwait() // 에러없이 즉시 리턴되어야 함.
+        try {
+            service.await(0) // 에러없이 즉시 리턴되어야 함.
+            service.stopAndAwait() // 에러없이 즉시 리턴되어야 함.
+        } catch(e: Exception) {
+            Fail.fail("stopAndWait() failed.")
+        }
     }
 
     @Test
@@ -128,7 +137,7 @@ internal class ServiceTest {
         val executorService = Executors.newSingleThreadExecutor()
         val task = TestTask()
         val service = ExectrService(executorService)
-        val signal = AtomicSignal()
+        val errorSignal = AtomicSignal()
 
         Thread { // 1.5초 뒤 stop을 요청하는 thread.
             Thread.sleep(1500)
@@ -139,7 +148,7 @@ internal class ServiceTest {
             Thread.sleep(500)
             service.await()
             if (service.isRunning())
-                signal.signal()
+                errorSignal.signal()
         }.start()
 
         service.start(task) // 실제 service 시작.
@@ -156,20 +165,22 @@ internal class ServiceTest {
         assertThat(task.value).isEqualTo(200)
 
         Thread.sleep(100)
-        assertThat(signal.isSignalled()).isFalse
+        assertThat(errorSignal.isSignalled()).isFalse
 
-        service.await(0) // 에러없이 즉시 리턴되어야 함.
-
-        service.stopAndAwait() // 에러없이 즉시 리턴되어야 함.
+        try {
+            service.await(0) // 에러없이 즉시 리턴되어야 함.
+            service.stopAndAwait() // 에러없이 즉시 리턴되어야 함.
+        } catch(e: Exception) {
+            Fail.fail("stopAndWait() failed.")
+        }
     }
 
-    @DelicateCoroutinesApi
     @Test
     @DisplayName("CoroutineService 테스트")
     internal fun coroutineServiceTest() {
         val task = TestCoTask()
-        val service = CoroutineService(GlobalScope)
-        val signal = AtomicSignal()
+        val service = CoroutineService(CoroutineScope(Dispatchers.Default + CoroutineName("test-coroutine")))
+        val errorSignal = AtomicSignal()
 
         Thread { // 1.5초 뒤 stop을 요청하는 thread.
             println("stopThread started.")
@@ -183,7 +194,7 @@ internal class ServiceTest {
             Thread.sleep(500)
             service.await()
             if (service.isRunning())
-                signal.signal()
+                errorSignal.signal()
             println("waitThread stopped.")
         }.start()
 
@@ -203,8 +214,13 @@ internal class ServiceTest {
         assertThat(task.value).isEqualTo(200)
 
         Thread.sleep(100)
-        assertThat(signal.isSignalled()).isFalse
+        assertThat(errorSignal.isSignalled()).isFalse
 
-        service.stopAndAwait() // 에러없이 즉시 리턴되어야 함.
+        try {
+            service.await(0) // 에러없이 즉시 리턴되어야 함.
+            service.stopAndAwait() // 에러없이 즉시 리턴되어야 함.
+        } catch(e: Exception) {
+            Fail.fail("stopAndWait() failed.")
+        }
     }
 }

@@ -12,8 +12,7 @@ import kotlin.coroutines.CoroutineContext
  * task의 구현에 달려있으며 coroutine의 job은 cancel되지 않는다.
  * 만약 cancel()을 호출하는 stop()의 구현을 원한다면 stop() 메소드를 override하여 구현할 수 있다.
  */
-@DelicateCoroutinesApi
-class CoroutineService(private val coroutineScope: CoroutineScope = GlobalScope): CoService {
+class CoroutineService constructor(private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)): CoService {
     override val stopSignal = AtomicSignal() // stop을 요청하는 signal일 뿐이다.
     private val atomicJob = AtomicReference<Job>()
 
