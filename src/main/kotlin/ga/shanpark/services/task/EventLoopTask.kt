@@ -8,6 +8,12 @@ import java.util.concurrent.TimeUnit
  * event loop를 구현하는 task 객체.
  * generic으로 구현되어 event 객체의 타입은 어떤 타입이든 될 수 있다.
  *
+ * stop()이 호출되어도 이벤트 대기 timeout이 발생할 때 까지는 종료되지 않는다.
+ * timeout이 발생해서 stopSignal로 stop 요청이 되었음을 인지하면 더 이상 loop를 계속하지 않고 빠져나온다.
+ * 이 때 queue에 남아있는 event는 모두 버려진다.
+ *
+ * 이 stop된 task는 재사용 가능하다.
+ *
  * @param eventHandler event가 수신되면 호출될 handler function. handler의 parameter로 event객체가 넘어온다.
  * @param timeoutMillis 이 파라미터로 지정된 시간(milliseconds)동안 아무런 이벤트가 수신되지 않으면 idleHandler function이
  *                      호출된다. 또한 이 때 event를 wait하는 상태가 풀리고 stopSignal을 검사하게 되므로 너무 큰 값을 지정하면
@@ -16,7 +22,7 @@ import java.util.concurrent.TimeUnit
  *                      있으므로 무시할 수 있는 적당한 종료 event를 정해서 사용하면 된다.
  * @param idleHandler 일정 시간(timeoutMillis) 동안 이벤트가 수신되지 않으면 호출되는 handler function.
  */
-class EventQueueTask<T>(private val eventHandler: (T) -> Unit, private val timeoutMillis: Long = 1000, private val idleHandler: () -> Unit = {}) : Task {
+class EventLoopTask<T>(private val eventHandler: (T) -> Unit, private val timeoutMillis: Long = 1000, private val idleHandler: () -> Unit = {}) : Task {
     private val queue: LinkedBlockingQueue<T> = LinkedBlockingQueue()
 
     /**
@@ -31,8 +37,11 @@ class EventQueueTask<T>(private val eventHandler: (T) -> Unit, private val timeo
 
     override fun run(stopSignal: Signal) {
         var event: T?
-        while (!stopSignal.isSignalled()) {
+        while (true) {
             event = queue.poll(timeoutMillis, TimeUnit.MILLISECONDS)
+            if (stopSignal.isSignalled()) // poll에서 빠져나오면 즉시 stopSignal부터 검사
+                break
+
             if (event == null)
                 idleHandler()
             else

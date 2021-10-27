@@ -44,6 +44,8 @@ class CoroutineService constructor(private val coroutineScope: CoroutineScope = 
         try {
             task.init()
             task.run(stopSignal)
+        } catch (e: CancellationException) { // 부모 context에서 cancel()될 수 있으므로.
+            // Normal termination.
         } finally {
             clear(task) // clear()는 반드시 호출되어야 한다. 여기서 uninit()도 호출된다.
         }

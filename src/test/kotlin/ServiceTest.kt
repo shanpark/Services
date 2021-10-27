@@ -183,22 +183,17 @@ internal class ServiceTest {
         val errorSignal = AtomicSignal()
 
         Thread { // 1.5초 뒤 stop을 요청하는 thread.
-            println("stopThread started.")
             Thread.sleep(1500)
             service.stop()
-            println("stopThread stopped.")
         }.start()
 
         Thread { // 종료될 때까지 기다리는 thread.
-            println("waitThread started.")
             Thread.sleep(500)
             service.await()
             if (service.isRunning())
                 errorSignal.signal()
-            println("waitThread stopped.")
         }.start()
 
-        println("service start >>>")
         service.start(task) // 실제 service 시작.
         assertThat(service.isRunning()).isTrue
         Thread.sleep(500)
@@ -209,7 +204,6 @@ internal class ServiceTest {
 
         service.await()
         assertThat(service.isRunning()).isFalse
-        println("service stopped >>>")
 
         assertThat(task.value).isEqualTo(200)
 
