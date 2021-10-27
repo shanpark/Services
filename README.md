@@ -8,6 +8,6 @@ To install the library add:
        maven { url "https://jitpack.io" }
    }
    dependencies {
-       implementation 'com.github.jitpack:gradle-simple:1.1'
+       implementation 'com.github.shanpark:Services:0.0.2'
    }
    ```  
