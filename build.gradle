@@ -3,7 +3,7 @@ plugins {
     id 'java'
 }
 
-group 'ga.shanpark'
+group 'io.github.shanpark'
 version '0.0.1'
 
 repositories {
