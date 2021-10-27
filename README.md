@@ -1,5 +1,7 @@
 # Services
 
+[![](https://jitpack.io/v/shanpark/Services.svg)](https://jitpack.io/#shanpark/Services)
+
 To install the library add: 
  
    ```gradle
@@ -8,6 +10,6 @@ To install the library add:
        maven { url "https://jitpack.io" }
    }
    dependencies {
-       implementation 'com.github.shanpark:Services:0.0.2'
+       implementation 'com.github.shanpark:services:0.0.3'
    }
    ```  
