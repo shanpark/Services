@@ -4,7 +4,7 @@ To install the library add:
  
    ```gradle
    repositories { 
-       mavenCentral()
+       ...
        maven { url "https://jitpack.io" }
    }
    dependencies {
