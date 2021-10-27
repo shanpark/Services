@@ -2,9 +2,7 @@ package ga.shanpark.services.coroutine
 
 import ga.shanpark.services.signal.Signal
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.withTimeoutOrNull
-import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * event loop를 구현하는 coroutine task 객체.
