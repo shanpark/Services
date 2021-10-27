@@ -1,6 +1,6 @@
-package ga.shanpark.services.util
+package io.github.shanpark.services.util
 
-import ga.shanpark.services.Service
+import io.github.shanpark.services.Service
 
 /**
  * 파라미터로 받은 모든 service들이 종료될 때 까지 대기한다.

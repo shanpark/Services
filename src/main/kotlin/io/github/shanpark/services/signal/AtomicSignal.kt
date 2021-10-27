@@ -1,4 +1,4 @@
-package ga.shanpark.services.signal
+package io.github.shanpark.services.signal
 
 import java.util.concurrent.atomic.AtomicBoolean
 

@@ -1,6 +1,6 @@
-package ga.shanpark.services.coroutine
+package io.github.shanpark.services.coroutine
 
-import ga.shanpark.services.signal.Signal
+import io.github.shanpark.services.signal.Signal
 
 /**
  * CoService가 실행할 수 있는 CoTask 객체의 interface.

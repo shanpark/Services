@@ -1,7 +1,7 @@
-package ga.shanpark.services
+package io.github.shanpark.services
 
-import ga.shanpark.services.task.Task
-import ga.shanpark.services.signal.AtomicSignal
+import io.github.shanpark.services.task.Task
+import io.github.shanpark.services.signal.AtomicSignal
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit

@@ -1,6 +1,6 @@
-package ga.shanpark.services.task
+package io.github.shanpark.services.task
 
-import ga.shanpark.services.signal.Signal
+import io.github.shanpark.services.signal.Signal
 
 /**
  * Service가 실행할 수 있는 Task 객체의 interface.

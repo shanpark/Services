@@ -1,6 +1,6 @@
-package ga.shanpark.services.coroutine
+package io.github.shanpark.services.coroutine
 
-import ga.shanpark.services.signal.Signal
+import io.github.shanpark.services.signal.Signal
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -22,7 +22,8 @@ import kotlinx.coroutines.withTimeoutOrNull
  *                      있으므로 무시할 수 있는 적당한 종료 event를 정해서 사용하면 된다.
  * @param idleHandler 일정 시간(timeoutMillis) 동안 이벤트가 수신되지 않으면 호출되는 handler function.
  */
-class EventLoopCoTask<T>(private val eventHandler: suspend (T) -> Unit, private val timeoutMillis: Long = 1000, private val idleHandler: suspend () -> Unit = {}): CoTask {
+class EventLoopCoTask<T>(private val eventHandler: suspend (T) -> Unit, private val timeoutMillis: Long = 1000, private val idleHandler: suspend () -> Unit = {}):
+    CoTask {
     private var queue: Channel<T> = Channel(Channel.UNLIMITED)
 
     /**

@@ -1,7 +1,7 @@
-package ga.shanpark.services
+package io.github.shanpark.services
 
-import ga.shanpark.services.signal.AtomicSignal
-import ga.shanpark.services.task.Task
+import io.github.shanpark.services.signal.AtomicSignal
+import io.github.shanpark.services.task.Task
 import java.util.concurrent.atomic.AtomicReference
 
 /**

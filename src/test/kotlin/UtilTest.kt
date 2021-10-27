@@ -1,7 +1,7 @@
-import ga.shanpark.services.ThreadService
-import ga.shanpark.services.signal.Signal
-import ga.shanpark.services.task.Task
-import ga.shanpark.services.util.await
+import io.github.shanpark.services.ThreadService
+import io.github.shanpark.services.signal.Signal
+import io.github.shanpark.services.task.Task
+import io.github.shanpark.services.util.await
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Percentage
 import org.junit.jupiter.api.DisplayName

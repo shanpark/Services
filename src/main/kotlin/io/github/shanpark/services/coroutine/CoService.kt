@@ -1,6 +1,6 @@
-package ga.shanpark.services.coroutine
+package io.github.shanpark.services.coroutine
 
-import ga.shanpark.services.signal.Signal
+import io.github.shanpark.services.signal.Signal
 
 /**
  * CoTask를 실행하는 클래스들의 interface.

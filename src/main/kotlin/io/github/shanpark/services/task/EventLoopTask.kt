@@ -1,6 +1,6 @@
-package ga.shanpark.services.task
+package io.github.shanpark.services.task
 
-import ga.shanpark.services.signal.Signal
+import io.github.shanpark.services.signal.Signal
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
 
@@ -22,7 +22,8 @@ import java.util.concurrent.TimeUnit
  *                      있으므로 무시할 수 있는 적당한 종료 event를 정해서 사용하면 된다.
  * @param idleHandler 일정 시간(timeoutMillis) 동안 이벤트가 수신되지 않으면 호출되는 handler function.
  */
-class EventLoopTask<T>(private val eventHandler: (T) -> Unit, private val timeoutMillis: Long = 1000, private val idleHandler: () -> Unit = {}) : Task {
+class EventLoopTask<T>(private val eventHandler: (T) -> Unit, private val timeoutMillis: Long = 1000, private val idleHandler: () -> Unit = {}) :
+    Task {
     private val queue: LinkedBlockingQueue<T> = LinkedBlockingQueue()
 
     /**
