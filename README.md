@@ -10,6 +10,6 @@ To install the library add:
        maven { url "https://jitpack.io" }
    }
    dependencies {
-       implementation 'com.github.shanpark:services:0.0.3'
+       implementation 'com.github.shanpark:services:0.0.1'
    }
    ```  
