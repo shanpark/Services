@@ -16,20 +16,20 @@ internal class TaskTest {
         val sb = StringBuilder()
 
         val task = EventLoopTask<String>(
-            { event -> sb.append(event) }, 1000, { sb.append("Idle") }
+            { event -> sb.append(event) }, 500, { sb.append("Idle") }
         )
         val service = ThreadService()
 
         service.start(task)
 
-        Thread { // 1.5초 뒤 stop을 요청하는 thread.
+        Thread {
             Thread.sleep(100)
             task.sendEvent("Hello")
-            Thread.sleep(1100)
+            Thread.sleep(600)
             task.sendEvent("World")
         }.start()
 
-        Thread.sleep(1300)
+        Thread.sleep(800)
         service.stopAndAwait()
 
         assertThat(sb.toString()).isEqualTo(("HelloIdleWorld"))
@@ -41,7 +41,7 @@ internal class TaskTest {
         val sb = StringBuilder()
 
         val task = EventLoopCoTask<String>(
-            { event -> sb.append(event) }, 1000, { sb.append("Idle") }
+            { event -> sb.append(event) }, 500, { sb.append("Idle") }
         )
         val service = CoroutineService()
 
@@ -50,11 +50,11 @@ internal class TaskTest {
         CoroutineScope(Dispatchers.Default).launch {
             delay(100)
             task.sendEvent("Hello")
-            delay(1100)
+            delay(600)
             task.sendEvent("World")
         }
 
-        Thread.sleep(1300)
+        Thread.sleep(800)
         service.stopAndAwait()
 
         assertThat(sb.toString()).isEqualTo(("HelloIdleWorld"))

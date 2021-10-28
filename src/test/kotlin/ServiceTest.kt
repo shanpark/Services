@@ -22,7 +22,7 @@ internal class TestTask: Task {
 
     override fun run(stopSignal: Signal) {
         while (!stopSignal.isSignalled()) {
-            Thread.sleep(1000)
+            Thread.sleep(500)
             value++
         }
     }
@@ -41,7 +41,7 @@ internal class TestCoTask: CoTask {
 
     override suspend fun run(stopSignal: Signal) {
         while (!stopSignal.isSignalled()) {
-            delay(1000)
+            delay(500)
             value++
         }
     }
@@ -60,13 +60,13 @@ internal class ServiceTest {
         val service = SyncService()
         val errorSignal = AtomicSignal()
 
-        Thread { // 1.5초 뒤 stop을 요청하는 thread.
-            Thread.sleep(1500)
+        Thread { // 0.75초 뒤 stop을 요청하는 thread.
+            Thread.sleep(750)
             service.stop()
         }.start()
 
         Thread { // 종료될 때까지 기다리는 thread.
-            Thread.sleep(500)
+            Thread.sleep(300)
             service.await()
             if (service.isRunning())
                 errorSignal.signal()
@@ -96,12 +96,12 @@ internal class ServiceTest {
         val errorSignal = AtomicSignal()
 
         Thread { // 1.5초 뒤 stop을 요청하는 thread.
-            Thread.sleep(1500)
+            Thread.sleep(750)
             service.stop()
         }.start()
 
         Thread { // 종료될 때까지 기다리는 thread.
-            Thread.sleep(500)
+            Thread.sleep(300)
             service.await()
             if (service.isRunning())
                 errorSignal.signal()
@@ -109,10 +109,10 @@ internal class ServiceTest {
 
         service.start(task) // 실제 service 시작.
         assertThat(service.isRunning()).isTrue
-        Thread.sleep(500)
+        Thread.sleep(250)
         assertThat(task.value).isEqualTo(100)
 
-        Thread.sleep(1000)
+        Thread.sleep(500)
         assertThat(task.value).isEqualTo(101)
 
         service.await()
@@ -140,12 +140,12 @@ internal class ServiceTest {
         val errorSignal = AtomicSignal()
 
         Thread { // 1.5초 뒤 stop을 요청하는 thread.
-            Thread.sleep(1500)
+            Thread.sleep(750)
             service.stop()
         }.start()
 
         Thread { // 종료될 때까지 기다리는 thread.
-            Thread.sleep(500)
+            Thread.sleep(300)
             service.await()
             if (service.isRunning())
                 errorSignal.signal()
@@ -153,10 +153,10 @@ internal class ServiceTest {
 
         service.start(task) // 실제 service 시작.
         assertThat(service.isRunning()).isTrue
-        Thread.sleep(500)
+        Thread.sleep(250)
         assertThat(task.value).isEqualTo(100)
 
-        Thread.sleep(1000)
+        Thread.sleep(500)
         assertThat(task.value).isEqualTo(101)
 
         service.await()
@@ -183,12 +183,12 @@ internal class ServiceTest {
         val errorSignal = AtomicSignal()
 
         Thread { // 1.5초 뒤 stop을 요청하는 thread.
-            Thread.sleep(1500)
+            Thread.sleep(750)
             service.stop()
         }.start()
 
         Thread { // 종료될 때까지 기다리는 thread.
-            Thread.sleep(500)
+            Thread.sleep(300)
             service.await()
             if (service.isRunning())
                 errorSignal.signal()
@@ -196,10 +196,10 @@ internal class ServiceTest {
 
         service.start(task) // 실제 service 시작.
         assertThat(service.isRunning()).isTrue
-        Thread.sleep(500)
+        Thread.sleep(250)
         assertThat(task.value).isEqualTo(100)
 
-        Thread.sleep(1000)
+        Thread.sleep(500)
         assertThat(task.value).isEqualTo(101)
 
         service.await()

@@ -34,26 +34,25 @@ internal class UtilTest {
         service4.start(task)
 
         Thread {
-            Thread.sleep(1000)
+            Thread.sleep(300)
             service1.stop()
-            Thread.sleep(1000)
+            Thread.sleep(300)
             service2.stop()
-            Thread.sleep(1000)
+            Thread.sleep(300)
             service3.stop()
-            Thread.sleep(1000)
+            Thread.sleep(300)
             service4.stop()
         }.start()
 
         val startTime = System.currentTimeMillis()
         await(service3, service1, service4, service2)
         val elapsedTime = System.currentTimeMillis() - startTime
-        println("elapsed: $elapsedTime")
 
         assertThat(service1.isRunning()).isFalse
         assertThat(service2.isRunning()).isFalse
         assertThat(service3.isRunning()).isFalse
         assertThat(service4.isRunning()).isFalse
 
-        assertThat(elapsedTime).isCloseTo(4000, Percentage.withPercentage(3.0))
+        assertThat(elapsedTime).isCloseTo(1200, Percentage.withPercentage(3.0))
     }
 }
