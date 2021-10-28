@@ -3,7 +3,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 group = 'io.github.shanpark'
-version = '0.0.1'
+version = '0.0.2'
 
 sourceCompatibility = 1.8 // java 8
 targetCompatibility = 1.8
