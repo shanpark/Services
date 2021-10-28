@@ -1,11 +1,12 @@
-plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.5.31'
-    id 'java'
-    id 'maven-publish'
-}
+//apply plugin: 'org.jetbrains.kotlin.jvm' version '1.5.31'
+apply plugin: 'java'
+apply plugin: 'maven'
 
-group 'io.github.shanpark'
-version '0.0.1'
+group = 'io.github.shanpark'
+version = '0.0.1'
+
+sourceCompatibility = 1.8 // java 8
+targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -13,7 +14,7 @@ repositories {
 
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.5.31'
-    implementation('org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt')
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt'
 
     testImplementation 'org.assertj:assertj-core:3.21.0'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5:1.5.31'
@@ -22,3 +23,64 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+// To specify a license in the pom:
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+    }
+}
+
+wrapper {
+    gradleVersion = "6.1.1"
+    distributionType = Wrapper.DistributionType.ALL
+}
+
+
+//plugins {
+//    id 'org.jetbrains.kotlin.jvm' version '1.5.31'
+//    id 'java'
+//    id 'maven-publish'
+//}
+//
+//group 'io.github.shanpark'
+//version '0.0.1'
+//
+//repositories {
+//    mavenCentral()
+//}
+
+//dependencies {
+//    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.5.31'
+//    implementation('org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt')
+//
+//    testImplementation 'org.assertj:assertj-core:3.21.0'
+//    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5:1.5.31'
+//}
+//
+//test {
+//    useJUnitPlatform()
+//}
