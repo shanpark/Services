@@ -53,6 +53,6 @@ internal class UtilTest {
         assertThat(service3.isRunning()).isFalse
         assertThat(service4.isRunning()).isFalse
 
-        assertThat(elapsedTime).isCloseTo(1200, Percentage.withPercentage(3.0))
+        assertThat(elapsedTime).isCloseTo(1200, Percentage.withPercentage(10.0))
     }
 }
