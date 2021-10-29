@@ -1,6 +1,6 @@
-import io.github.shanpark.services.SyncService
 import io.github.shanpark.services.ThreadService
 import io.github.shanpark.services.coroutine.CoroutineService
+import io.github.shanpark.services.util.EventPool
 import io.github.shanpark.services.util.await
 import io.github.shanpark.services.util.coTask
 import io.github.shanpark.services.util.task
@@ -87,5 +87,26 @@ internal class UtilTest {
         CoroutineService().start(task).await()
 
         assertThat(sb.toString()).isEqualTo("Init Run Uninit")
+    }
+
+    class Event(var id: Int) {
+        companion object {
+            fun new(): Event {
+                return Event(0)
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("EventPool 테스트")
+    internal fun eventPoolTest() {
+        val eventPool = EventPool(Event::new)
+
+        var event = eventPool.get()
+        event.id = 100
+        eventPool.ret(event)
+
+        event = eventPool.get()
+        assertThat(event.id).isEqualTo(100)
     }
 }
