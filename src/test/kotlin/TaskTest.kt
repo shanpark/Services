@@ -2,6 +2,7 @@ import io.github.shanpark.services.ThreadService
 import io.github.shanpark.services.coroutine.CoroutineService
 import io.github.shanpark.services.coroutine.EventLoopCoTask
 import io.github.shanpark.services.task.EventLoopTask
+import io.github.shanpark.services.task.Task
 import kotlinx.coroutines.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName

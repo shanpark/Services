@@ -1,7 +1,7 @@
+import io.github.shanpark.services.SyncService
 import io.github.shanpark.services.ThreadService
-import io.github.shanpark.services.signal.Signal
-import io.github.shanpark.services.task.Task
 import io.github.shanpark.services.util.await
+import io.github.shanpark.services.util.task
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Percentage
 import org.junit.jupiter.api.DisplayName
@@ -9,20 +9,17 @@ import org.junit.jupiter.api.Test
 
 internal class UtilTest {
 
-    internal class SomeTask: Task {
-        override fun run(stopSignal: Signal) {
-            while (true) {
-                Thread.sleep(100)
-                if (stopSignal.isSignalled())
-                    break
-            }
-        }
-    }
-
     @Test
     @DisplayName("await() 테스트")
     internal fun awaitTest() {
-        val task = SomeTask()
+        val task = task {
+            while (true) {
+                Thread.sleep(100)
+                if (it.isSignalled())
+                    break
+            }
+        }
+
         val service1 = ThreadService()
         val service2 = ThreadService()
         val service3 = ThreadService()
@@ -54,5 +51,21 @@ internal class UtilTest {
         assertThat(service4.isRunning()).isFalse
 
         assertThat(elapsedTime).isCloseTo(1200, Percentage.withPercentage(10.0))
+    }
+
+    @Test
+    @DisplayName("Task.task 테스트")
+    internal fun taskTaskTest() {
+        val sb = StringBuilder()
+        val task = task({
+            sb.append("Init")
+        }, {
+            sb.append(" Run ")
+        }, {
+            sb.append("Uninit")
+        })
+        SyncService().start(task)
+
+        assertThat(sb.toString()).isEqualTo("Init Run Uninit")
     }
 }
