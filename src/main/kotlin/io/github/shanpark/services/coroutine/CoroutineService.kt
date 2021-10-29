@@ -20,10 +20,11 @@ class CoroutineService(private val coroutineScope: CoroutineScope = CoroutineSco
 
     constructor(context: CoroutineContext): this(CoroutineScope(context))
 
-    override fun start(task: CoTask) {
+    override fun start(task: CoTask): CoService {
         if (!atomicJob.compareAndSet(null, coroutineScope.launch { run(task) })) {
             throw IllegalStateException("The service has already been started.")
         }
+        return this
     }
 
     override fun isRunning(): Boolean {

@@ -19,7 +19,7 @@ interface CoService {
      * @param task 이 CoService가 실행할 CoTask 객체.
      * @throws IllegalStateException 이미 start가 된 상태의 CoService를 다시 start 시키면 발생한다.
      */
-    fun start(task: CoTask)
+    fun start(task: CoTask): CoService
 
     /**
      * CoService의 실행을 중지 요청한다.
@@ -27,9 +27,10 @@ interface CoService {
      * CoTask에서는 stopSignal이 signalled상태가 되면 가능한 빨리 실행을 종료하도록 구현되어야 한다.
      * 시작되지 않았으면 아무 것도 하지 않는다.
      */
-    fun stop() {
+    fun stop(): CoService {
         if (isRunning())
             stopSignal.signal() // stop을 요청하는 signal을 설정한다. 이후 service의 실행 종료는 task의 구현에 따라 결정된다.
+        return this
     }
 
     /**

@@ -18,9 +18,10 @@ class ExectrService(private val executor: ExecutorService) : Service {
     override val stopSignal = AtomicSignal() // stop을 요청하는 signal일 뿐이다.
     private val future = AtomicReference<Future<*>>()
 
-    override fun start(task: Task) {
+    override fun start(task: Task): Service {
         if (!future.compareAndSet(null, executor.submit { run(task) }))
             throw IllegalStateException("The service has already been started.")
+        return this
     }
 
     override fun isRunning(): Boolean {

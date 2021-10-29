@@ -1,6 +1,8 @@
 import io.github.shanpark.services.SyncService
 import io.github.shanpark.services.ThreadService
+import io.github.shanpark.services.coroutine.CoroutineService
 import io.github.shanpark.services.util.await
+import io.github.shanpark.services.util.coTask
 import io.github.shanpark.services.util.task
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Percentage
@@ -54,8 +56,8 @@ internal class UtilTest {
     }
 
     @Test
-    @DisplayName("Task.task 테스트")
-    internal fun taskTaskTest() {
+    @DisplayName("task factory함수 테스트")
+    internal fun taskFactoryTest() {
         val sb = StringBuilder()
         val task = task({
             sb.append("Init")
@@ -64,7 +66,25 @@ internal class UtilTest {
         }, {
             sb.append("Uninit")
         })
-        SyncService().start(task)
+
+        ThreadService().start(task).await()
+
+        assertThat(sb.toString()).isEqualTo("Init Run Uninit")
+    }
+
+    @Test
+    @DisplayName("coTask factory함수 테스트")
+    internal fun coTaskFactoryTest() {
+        val sb = StringBuilder()
+        val task = coTask({
+            sb.append("Init")
+        }, {
+            sb.append(" Run ")
+        }, {
+            sb.append("Uninit")
+        })
+
+        CoroutineService().start(task).await()
 
         assertThat(sb.toString()).isEqualTo("Init Run Uninit")
     }

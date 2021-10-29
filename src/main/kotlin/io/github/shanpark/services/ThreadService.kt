@@ -14,11 +14,13 @@ class ThreadService: Service {
     override val stopSignal = AtomicSignal() // stop을 요청하는 signal일 뿐이다.
     private val thread = AtomicReference<Thread>()
 
-    override fun start(task: Task) {
-        if (thread.compareAndSet(null, Thread { run(task) } ))
+    override fun start(task: Task): Service {
+        if (thread.compareAndSet(null, Thread { run(task) } )) {
             thread.get().start()
-        else
+            return this
+        } else {
             throw IllegalStateException("The service has already been started.")
+        }
     }
 
     override fun isRunning(): Boolean {

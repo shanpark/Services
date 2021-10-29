@@ -14,11 +14,12 @@ class SyncService: Service {
     override val stopSignal = AtomicSignal() // stop을 요청하는 signal일 뿐이다.
     private val running = AtomicBoolean(false)
 
-    override fun start(task: Task) {
+    override fun start(task: Task): Service {
         if (running.compareAndSet(false, true)) {
             synchronized(stopSignal) { // 여기서 stopSignal은 단순히 lock의 역할일 뿐이다.
                 run(task)
             }
+            return this
         } else {
             throw IllegalStateException("The service has already been started.")
         }

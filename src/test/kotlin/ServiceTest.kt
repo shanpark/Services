@@ -179,7 +179,7 @@ internal class ServiceTest {
     @DisplayName("CoroutineService 테스트")
     internal fun coroutineServiceTest() {
         val task = TestCoTask()
-        val service = CoroutineService(CoroutineScope(Dispatchers.Default + CoroutineName("test-coroutine")))
+        val service = CoroutineService()
         val errorSignal = AtomicSignal()
 
         Thread { // 1.5초 뒤 stop을 요청하는 thread.
