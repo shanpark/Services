@@ -38,6 +38,8 @@ class ExectrService(private val executor: ExecutorService) : Service {
         try {
             task.init()
             task.run(stopSignal)
+        } catch (e: Exception) {
+            task.onError(e)
         } finally {
             clear(task) // clear()는 반드시 호출되어야 한다. 여기서 uninit()도 호출된다.
         }
@@ -46,6 +48,8 @@ class ExectrService(private val executor: ExecutorService) : Service {
     private fun clear(task: Task) {
         try {
             task.uninit() // task의 uninit() 코드가 먼저 호출되어야 한다.
+        } catch (e: Exception) {
+            task.onError(e)
         } finally {
             future.set(null)
             stopSignal.reset()

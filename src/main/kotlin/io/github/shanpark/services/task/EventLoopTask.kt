@@ -21,9 +21,13 @@ import java.util.concurrent.TimeUnit
  *                      timeout 시간을 길게 할 경우 stop()을 호출하고나서 적당히 무시할 수 있는 event를 보내주면 즉시 종료시킬 수
  *                      있으므로 무시할 수 있는 적당한 종료 event를 정해서 사용하면 된다.
  * @param idleHandler 일정 시간(timeoutMillis) 동안 이벤트가 수신되지 않으면 호출되는 handler function.
+ * @param errorHandler task 실행 중 error 발생 시 호출되는 handler이다.
  */
-class EventLoopTask<T>(private val eventHandler: (T) -> Unit, private val timeoutMillis: Long = 1000, private val idleHandler: () -> Unit = {}) :
-    Task {
+class EventLoopTask<T>(private val eventHandler: (T) -> Unit,
+                       private val timeoutMillis: Long = 1000,
+                       private val idleHandler: () -> Unit = {},
+                       private val errorHandler: (Throwable) -> Unit = { it.printStackTrace() }) : Task {
+
     private val queue: LinkedBlockingQueue<T> = LinkedBlockingQueue()
 
     /**
@@ -52,5 +56,9 @@ class EventLoopTask<T>(private val eventHandler: (T) -> Unit, private val timeou
 
     override fun uninit() {
         queue.clear()
+    }
+
+    override fun onError(e: Throwable) {
+        errorHandler(e)
     }
 }

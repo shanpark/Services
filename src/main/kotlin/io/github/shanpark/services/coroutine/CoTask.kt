@@ -31,4 +31,16 @@ interface CoTask {
      * 실행 중 예외가 발생하더라도 항상 마지막에 호출된다.
      */
     suspend fun uninit() {}
+
+    /**
+     * Task를 실행하는 중에 발생하는 예외 처리를 위한 메소드이다.
+     * 어디서든 예외가 발생하면 즉시 호출되며 실행은 중단된다.
+     * init(), run()에서 에러가 발생하여 이 메소드가 호출되더라도 uninit()는 호출된다.
+     * uninit() 수행중 발생하는 에러에 대해서도 onError()는 호출된다.
+     *
+     * 기본 구현은 stack trace를 출력한다.
+     *
+     * @param e 발생한 에러의 throwable 객체
+     */
+    suspend fun onError(e: Throwable) { e.printStackTrace() }
 }

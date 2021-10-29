@@ -1,13 +1,16 @@
+import io.github.shanpark.services.SyncService
 import io.github.shanpark.services.ThreadService
 import io.github.shanpark.services.coroutine.CoroutineService
 import io.github.shanpark.services.coroutine.EventLoopCoTask
 import io.github.shanpark.services.task.EventLoopTask
-import io.github.shanpark.services.task.Task
-import kotlinx.coroutines.*
+import io.github.shanpark.services.util.task
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import java.lang.StringBuilder
 
 internal class TaskTest {
 
@@ -59,5 +62,23 @@ internal class TaskTest {
         service.stopAndAwait()
 
         assertThat(sb.toString()).isEqualTo(("HelloIdleWorld"))
+    }
+
+    @Test
+    @DisplayName("Task ErrorHandler 테스트")
+    internal fun taskErrorHandlerTest() {
+        val sb = StringBuilder()
+        val task = task({
+            sb.append("Init ")
+        }, {
+            throw RuntimeException("Error ")
+        }, {
+            sb.append("Uninit ")
+        }, {
+            sb.append(it.message)
+        })
+        SyncService().start(task)
+
+        assertThat(sb.toString()).isEqualTo("Init Error Uninit ")
     }
 }

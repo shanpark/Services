@@ -24,7 +24,7 @@ fun await(vararg services: Service) {
  * @return 생성된 task 객체를 반환한다.
  */
 fun task(run: (Signal) -> Unit): Task {
-    return task(init = null, run)
+    return task({}, run) // run만 넘기면 재귀호출이 된다.
 }
 
 /**
@@ -37,6 +37,9 @@ fun task(run: (Signal) -> Unit): Task {
  *
  * @return 생성된 task 객체를 반환한다.
  */
-fun task(init: (() -> Unit)? = null, run: (Signal) -> Unit, uninit: (() -> Unit)? = null): Task {
-    return SimpleTask(init, run, uninit)
+fun task(init: () -> Unit = {},
+         run: (Signal) -> Unit,
+         uninit: () -> Unit = {},
+         onError: (Throwable) -> Unit = { it.printStackTrace() }): Task {
+    return SimpleTask(init, run, uninit, onError)
 }

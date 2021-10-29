@@ -46,8 +46,10 @@ class CoroutineService(private val coroutineScope: CoroutineScope = CoroutineSco
         try {
             task.init()
             task.run(stopSignal)
-        } catch (e: CancellationException) { // 부모 context에서 cancel()될 수 있으므로.
+        } catch (e: CancellationException) { // 부모 context에서 cancel()될 수 있으며 이 경우 정상적인 동작으로 간주한다.
             // Normal termination.
+        } catch (e: Exception) {
+            task.onError(e)
         } finally {
             clear(task) // clear()는 반드시 호출되어야 한다. 여기서 uninit()도 호출된다.
         }
@@ -56,6 +58,8 @@ class CoroutineService(private val coroutineScope: CoroutineScope = CoroutineSco
     private suspend fun clear(task: CoTask) {
         try {
             task.uninit() // task의 uninit() 코드가 먼저 호출되어야 한다.
+        } catch (e: Exception) {
+            task.onError(e)
         } finally {
             atomicJob.set(null)
             stopSignal.reset()

@@ -33,6 +33,8 @@ class ThreadService: Service {
         try {
             task.init()
             task.run(stopSignal)
+        } catch (e: Exception) {
+            task.onError(e)
         } finally {
             clear(task) // clear()는 반드시 호출되어야 한다. 여기서 uninit()도 호출된다.
         }
@@ -41,6 +43,8 @@ class ThreadService: Service {
     private fun clear(task: Task) {
         try {
             task.uninit() // task의 uninit() 코드가 먼저 호출되어야 한다.
+        } catch (e: Exception) {
+            task.onError(e)
         } finally {
             thread.set(null)
             stopSignal.reset()

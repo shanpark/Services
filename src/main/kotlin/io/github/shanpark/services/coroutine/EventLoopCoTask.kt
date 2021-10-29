@@ -21,9 +21,12 @@ import kotlinx.coroutines.withTimeoutOrNull
  *                      timeout 시간을 길게 할 경우 stop()을 호출하고나서 적당히 무시할 수 있는 event를 보내주면 즉시 종료시킬 수
  *                      있으므로 무시할 수 있는 적당한 종료 event를 정해서 사용하면 된다.
  * @param idleHandler 일정 시간(timeoutMillis) 동안 이벤트가 수신되지 않으면 호출되는 handler function.
+ * @param errorHandler task 실행 중 error 발생 시 호출되는 handler이다.
  */
-class EventLoopCoTask<T>(private val eventHandler: suspend (T) -> Unit, private val timeoutMillis: Long = 1000, private val idleHandler: suspend () -> Unit = {}):
-    CoTask {
+class EventLoopCoTask<T>(private val eventHandler: suspend (T) -> Unit,
+                         private val timeoutMillis: Long = 1000,
+                         private val idleHandler: suspend () -> Unit = {},
+                         private val errorHandler: suspend (Throwable) -> Unit = { it.printStackTrace() } ): CoTask {
     private var queue: Channel<T> = Channel(Channel.UNLIMITED)
 
     /**
@@ -53,5 +56,9 @@ class EventLoopCoTask<T>(private val eventHandler: suspend (T) -> Unit, private 
         val oldQueue = queue
         queue = Channel(Channel.UNLIMITED) // 재사용 가능하도록 channel을 새로 할당한다.
         oldQueue.close()
+    }
+
+    override suspend fun onError(e: Throwable) {
+        errorHandler(e)
     }
 }
