@@ -82,7 +82,7 @@ service.stop()
 ## Install
 
 To install the library add: 
- 
+
 ```gradle
 repositories { 
    ...
@@ -90,6 +90,6 @@ repositories {
 }
 
 dependencies {
-   implementation 'com.github.shanpark:services:0.0.4'
+   implementation 'io.github.shanpark:services:0.0.5'
 }
 ```
