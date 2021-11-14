@@ -14,14 +14,17 @@ import kotlin.coroutines.CoroutineContext
  *
  * @param coroutineScope 이 서비스가 실행될 coroutine scope. default로 `Dispatchers.Default`에서 실행된다.
  */
-class CoroutineService(private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)): CoService {
+class CoroutineService(private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)) : CoService {
     override val stopSignal = AtomicSignal() // stop을 요청하는 signal일 뿐이다.
+    override lateinit var task: CoTask
     private val atomicJob = AtomicReference<Job>()
 
     constructor(context: CoroutineContext): this(CoroutineScope(context))
 
     override fun start(task: CoTask): CoService {
-        if (!atomicJob.compareAndSet(null, coroutineScope.launch { run(task) })) {
+        if (atomicJob.compareAndSet(null, coroutineScope.launch { run(task) })) {
+            this.task = task
+        } else {
             throw IllegalStateException("The service has already been started.")
         }
         return this

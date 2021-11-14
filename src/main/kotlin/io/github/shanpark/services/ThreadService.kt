@@ -12,10 +12,12 @@ import java.util.concurrent.atomic.AtomicReference
  */
 class ThreadService: Service {
     override val stopSignal = AtomicSignal() // stop을 요청하는 signal일 뿐이다.
+    override lateinit var task: Task
     private val thread = AtomicReference<Thread>()
 
     override fun start(task: Task): Service {
         if (thread.compareAndSet(null, Thread { run(task) } )) {
+            this.task = task
             thread.get().start()
             return this
         } else {

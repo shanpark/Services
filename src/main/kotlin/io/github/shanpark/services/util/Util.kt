@@ -39,11 +39,14 @@ fun task(run: (Signal) -> Unit): Task {
  *
  * @return 생성된 task 객체를 반환한다.
  */
-fun task(init: () -> Unit = {},
-         run: (Signal) -> Unit,
-         uninit: () -> Unit = {},
-         onError: (Throwable) -> Unit = { it.printStackTrace() }): Task {
-    return SimpleTask(init, run, uninit, onError)
+fun task(
+    init: () -> Unit = {},
+    run: (Signal) -> Unit,
+    uninit: () -> Unit = {},
+    stopRequested: () -> Unit = {},
+    onError: (Throwable) -> Unit = { it.printStackTrace() }
+): Task {
+    return SimpleTask(init, run, uninit, stopRequested, onError)
 }
 
 /**
@@ -68,9 +71,12 @@ fun coTask(run: suspend (Signal) -> Unit): CoTask {
  *
  * @return 생성된 task 객체를 반환한다.
  */
-fun coTask(init: suspend () -> Unit = {},
-           run: suspend (Signal) -> Unit,
-           uninit: suspend () -> Unit = {},
-           onError: suspend (Throwable) -> Unit = { it.printStackTrace() }): CoTask {
-    return SimpleCoTask(init, run, uninit, onError)
+fun coTask(
+    init: suspend () -> Unit = {},
+    run: suspend (Signal) -> Unit,
+    uninit: suspend () -> Unit = {},
+    stopRequested: suspend () -> Unit = {},
+    onError: suspend (Throwable) -> Unit = { it.printStackTrace() }
+): CoTask {
+    return SimpleCoTask(init, run, uninit, stopRequested, onError)
 }

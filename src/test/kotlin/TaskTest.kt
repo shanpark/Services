@@ -74,7 +74,8 @@ internal class TaskTest {
             throw RuntimeException("Error ")
         }, {
             sb.append("Uninit ")
-        }, {
+        }, {},
+        {
             sb.append(it.message)
         })
         SyncService().start(task)

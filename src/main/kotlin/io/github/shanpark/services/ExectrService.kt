@@ -16,10 +16,13 @@ import java.util.concurrent.atomic.AtomicReference
  */
 class ExectrService(private val executor: ExecutorService) : Service {
     override val stopSignal = AtomicSignal() // stop을 요청하는 signal일 뿐이다.
+    override lateinit var task: Task
     private val future = AtomicReference<Future<*>>()
 
     override fun start(task: Task): Service {
-        if (!future.compareAndSet(null, executor.submit { run(task) }))
+        if (future.compareAndSet(null, executor.submit { run(task) }))
+            this.task = task
+        else
             throw IllegalStateException("The service has already been started.")
         return this
     }

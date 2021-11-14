@@ -90,6 +90,6 @@ repositories {
 }
 
 dependencies {
-   implementation 'io.github.shanpark:services:0.0.5'
+   implementation 'io.github.shanpark:services:0.0.6'
 }
 ```

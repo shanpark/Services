@@ -11,6 +11,7 @@ import io.github.shanpark.services.task.Task
  */
 interface Service {
     val stopSignal: Signal
+    var task: Task
 
     /**
      * Task의 실행을 시작 시킨다.
@@ -29,8 +30,10 @@ interface Service {
      * 시작되지 않았으면 아무 것도 하지 않는다.
      */
     fun stop(): Service {
-        if (isRunning())
+        if (isRunning()) {
             stopSignal.signal() // stop을 요청하는 signal을 설정한다. 이후 service의 실행 종료는 task의 구현에 따라 결정된다.
+            task.stopRequested()
+        }
         return this
     }
 

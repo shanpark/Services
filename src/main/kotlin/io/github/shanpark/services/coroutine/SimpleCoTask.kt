@@ -11,12 +11,16 @@ import io.github.shanpark.services.signal.Signal
  * @param init init() 메소드에서 실행될 함수 객체.
  * @param run run() 메소드에서 실행될 함수 객체.
  * @param uninit uninit() 메소드에서 실행될 함수 객체.
+ * @param stopRequested stopRequested() 메소드에서 실행될 함수 객체.
  * @param onError onError() 메소드에서 실행될 함수 객체.
  */
-class SimpleCoTask(private val init: suspend () -> Unit = {},
-                   private val run: suspend (Signal) -> Unit,
-                   private val uninit: suspend () -> Unit = {},
-                   private val onError: suspend (Throwable) -> Unit = { it.printStackTrace() }): CoTask {
+class SimpleCoTask(
+    private val init: suspend () -> Unit = {},
+    private val run: suspend (Signal) -> Unit,
+    private val uninit: suspend () -> Unit = {},
+    private val stopRequested: suspend () -> Unit = {},
+    private val onError: suspend (Throwable) -> Unit = { it.printStackTrace() }
+) : CoTask {
     override suspend fun init() {
         init.invoke() // name 충돌로 invoke()로 호출할 것.
     }
@@ -27,6 +31,10 @@ class SimpleCoTask(private val init: suspend () -> Unit = {},
 
     override suspend fun uninit() {
         uninit.invoke() // name 충돌로 invoke()로 호출할 것.
+    }
+
+    override suspend fun stopRequested() {
+        stopRequested.invoke() // name 충돌로 invoke()로 호출할 것.
     }
 
     override suspend fun onError(e: Throwable) {

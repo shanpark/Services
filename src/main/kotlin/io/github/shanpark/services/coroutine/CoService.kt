@@ -1,6 +1,7 @@
 package io.github.shanpark.services.coroutine
 
 import io.github.shanpark.services.signal.Signal
+import kotlinx.coroutines.runBlocking
 
 /**
  * CoTask를 실행하는 클래스들의 interface.
@@ -10,6 +11,7 @@ import io.github.shanpark.services.signal.Signal
  */
 interface CoService {
     val stopSignal: Signal
+    var task: CoTask
 
     /**
      * CoTask의 실행을 시작 시킨다.
@@ -28,8 +30,10 @@ interface CoService {
      * 시작되지 않았으면 아무 것도 하지 않는다.
      */
     fun stop(): CoService {
-        if (isRunning())
+        if (isRunning()) {
             stopSignal.signal() // stop을 요청하는 signal을 설정한다. 이후 service의 실행 종료는 task의 구현에 따라 결정된다.
+            runBlocking { task.stopRequested() }
+        }
         return this
     }
 

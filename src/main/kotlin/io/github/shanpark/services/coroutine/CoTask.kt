@@ -33,6 +33,14 @@ interface CoTask {
     suspend fun uninit() {}
 
     /**
+     * run() 메소드의 stopSignal 파라미터는 stop 요청이 있었는지 즉시 알 수 없다.
+     * 필요한 때에 검사를 해봐야 알 수 있다. 따라서 service에 실제 stop() 요청이 들어오면 즉시 알 수 있도록
+     * 이 메소드를 호출해준다. 만약 run() 메소드의 동작이 적당히 자주 stopSignal을 검사할 수 없는 상태라면
+     * 이 메소드를 구현하여 요청 후 가능한 한 빨리 run()의 동작을 마무리 하도록 구현한다.
+     */
+    suspend fun stopRequested() {}
+
+    /**
      * Task를 실행하는 중에 발생하는 예외 처리를 위한 메소드이다.
      * 어디서든 예외가 발생하면 즉시 호출되며 실행은 중단된다.
      * init(), run()에서 에러가 발생하여 이 메소드가 호출되더라도 uninit()는 호출된다.
