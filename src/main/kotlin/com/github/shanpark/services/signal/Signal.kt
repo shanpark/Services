@@ -1,4 +1,4 @@
-package io.github.shanpark.services.signal
+package com.github.shanpark.services.signal
 
 interface Signal {
     /**

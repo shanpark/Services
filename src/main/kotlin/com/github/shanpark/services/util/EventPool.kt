@@ -1,4 +1,4 @@
-package io.github.shanpark.services.util
+package com.github.shanpark.services.util
 
 /**
  * event로 사용되는 객체의 garbage가 양산되는 현상을 막기 위해서 event 객체의 pool을 제공한다.

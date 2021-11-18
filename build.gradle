@@ -6,9 +6,9 @@ plugins {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId = 'io.github.shanpark'
+            groupId = 'com.github.shanpark'
             artifactId = 'services'
-            version = '0.0.6'
+            version = '0.0.7'
 
             from components.java
         }
@@ -21,7 +21,7 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.5.31"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
 
     testImplementation "org.assertj:assertj-core:3.21.0"
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.8.1"

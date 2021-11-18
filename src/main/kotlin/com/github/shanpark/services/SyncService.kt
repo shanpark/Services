@@ -1,24 +1,26 @@
-package io.github.shanpark.services
+package com.github.shanpark.services
 
-import io.github.shanpark.services.signal.AtomicSignal
-import io.github.shanpark.services.task.Task
-import java.util.concurrent.atomic.AtomicReference
+import com.github.shanpark.services.signal.AtomicSignal
+import com.github.shanpark.services.task.Task
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * 새로운 thread를 생성하여 그 thread에서 task를 수행한다.
+ * 핸재 thread에서 task를 실행하는 service이다. 일단 start()가 호출되면 service가 종료될 때까지 block된다.
  *
- * 서비스를 시작하면 매 번 새로운 thread를 생성하지만 한 service는 중첩해서 실행될 수 없기 떄문에
- * Service가 실행되는 동안에는 1개의 thread만 존재한다.
+ * service가 스스로 작업을 끝내고 종료되거나 다른 스레드에서 stop()이 호출되어 service가 종료되면
+ * block되었던 스레드는 block이 해제된다.
  */
-class ThreadService: Service {
+class SyncService: Service {
     override val stopSignal = AtomicSignal() // stop을 요청하는 signal일 뿐이다.
     override lateinit var task: Task
-    private val thread = AtomicReference<Thread>()
+    private val running = AtomicBoolean(false)
 
     override fun start(task: Task): Service {
-        if (thread.compareAndSet(null, Thread { run(task) } )) {
+        if (running.compareAndSet(false, true)) {
             this.task = task
-            thread.get().start()
+            synchronized(stopSignal) { // 여기서 stopSignal은 단순히 lock의 역할일 뿐이다.
+                run(task)
+            }
             return this
         } else {
             throw IllegalStateException("The service has already been started.")
@@ -26,11 +28,11 @@ class ThreadService: Service {
     }
 
     override fun isRunning(): Boolean {
-        return (thread.get() != null) // signal과 상관없이 thread의 실행 여부가 running 상태를 결정한다.
+        return running.get() // signal과 상관없이 running 상태를 따로 관리된다.
     }
 
     override fun await(millis: Long) {
-        thread.get()?.join(millis)
+        synchronized(stopSignal) {} // 여기서 stopSignal은 단순히 lock의 역할일 뿐이다.
     }
 
     private fun run(task: Task) {
@@ -50,7 +52,7 @@ class ThreadService: Service {
         } catch (e: Exception) {
             task.onError(e)
         } finally {
-            thread.set(null)
+            running.compareAndSet(true, false)
             stopSignal.reset()
         }
     }

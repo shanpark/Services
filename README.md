@@ -1,6 +1,6 @@
 # Services
 
-[![](https://jitpack.io/v/shanpark/Services.svg)](https://jitpack.io/#shanpark/Services)
+[![](https://jitpack.io/v/shanpark/services.svg)](https://jitpack.io/#shanpark/services)
 
 ### SyncService example
 
@@ -90,6 +90,6 @@ repositories {
 }
 
 dependencies {
-   implementation 'io.github.shanpark:services:0.0.6'
+   implementation 'com.github.shanpark:services:0.0.7'
 }
 ```

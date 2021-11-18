@@ -1,6 +1,6 @@
-package io.github.shanpark.services.task
+package com.github.shanpark.services.task
 
-import io.github.shanpark.services.signal.Signal
+import com.github.shanpark.services.signal.Signal
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
 

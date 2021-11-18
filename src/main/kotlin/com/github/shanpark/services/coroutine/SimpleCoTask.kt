@@ -1,6 +1,6 @@
-package io.github.shanpark.services.coroutine
+package com.github.shanpark.services.coroutine
 
-import io.github.shanpark.services.signal.Signal
+import com.github.shanpark.services.signal.Signal
 
 /**
  * CoTask 구현 객체로서 생성할 때 init, run, uninit, onError 함수를 받아서 task의 init, run, uninit, onError 함수에서

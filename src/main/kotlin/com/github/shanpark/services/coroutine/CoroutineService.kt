@@ -1,6 +1,6 @@
-package io.github.shanpark.services.coroutine
+package com.github.shanpark.services.coroutine
 
-import io.github.shanpark.services.signal.AtomicSignal
+import com.github.shanpark.services.signal.AtomicSignal
 import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.coroutines.CoroutineContext

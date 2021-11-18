@@ -1,9 +1,9 @@
-import io.github.shanpark.services.ThreadService
-import io.github.shanpark.services.coroutine.CoroutineService
-import io.github.shanpark.services.util.EventPool
-import io.github.shanpark.services.util.await
-import io.github.shanpark.services.util.coTask
-import io.github.shanpark.services.util.task
+import com.github.shanpark.services.ThreadService
+import com.github.shanpark.services.coroutine.CoroutineService
+import com.github.shanpark.services.util.EventPool
+import com.github.shanpark.services.util.await
+import com.github.shanpark.services.util.coTask
+import com.github.shanpark.services.util.task
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Percentage
 import org.junit.jupiter.api.DisplayName

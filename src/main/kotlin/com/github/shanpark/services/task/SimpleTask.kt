@@ -1,6 +1,6 @@
-package io.github.shanpark.services.task
+package com.github.shanpark.services.task
 
-import io.github.shanpark.services.signal.Signal
+import com.github.shanpark.services.signal.Signal
 
 /**
  * Task 구현 객체로서 생성할 때 init, run, uninit, onError 함수를 받아서 task의 init, run, uninit, onError 함수에서

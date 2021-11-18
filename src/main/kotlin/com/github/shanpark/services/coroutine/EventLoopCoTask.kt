@@ -1,6 +1,6 @@
-package io.github.shanpark.services.coroutine
+package com.github.shanpark.services.coroutine
 
-import io.github.shanpark.services.signal.Signal
+import com.github.shanpark.services.signal.Signal
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withTimeoutOrNull
 

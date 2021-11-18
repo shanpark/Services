@@ -1,7 +1,7 @@
-package io.github.shanpark.services
+package com.github.shanpark.services
 
-import io.github.shanpark.services.signal.Signal
-import io.github.shanpark.services.task.Task
+import com.github.shanpark.services.signal.Signal
+import com.github.shanpark.services.task.Task
 
 /**
  * Task를 실행하는 클래스들의 interface.

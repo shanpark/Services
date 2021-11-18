@@ -1,9 +1,9 @@
-import io.github.shanpark.services.SyncService
-import io.github.shanpark.services.ThreadService
-import io.github.shanpark.services.coroutine.CoroutineService
-import io.github.shanpark.services.coroutine.EventLoopCoTask
-import io.github.shanpark.services.task.EventLoopTask
-import io.github.shanpark.services.util.task
+import com.github.shanpark.services.SyncService
+import com.github.shanpark.services.ThreadService
+import com.github.shanpark.services.coroutine.CoroutineService
+import com.github.shanpark.services.coroutine.EventLoopCoTask
+import com.github.shanpark.services.task.EventLoopTask
+import com.github.shanpark.services.util.task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

@@ -1,11 +1,11 @@
-package io.github.shanpark.services.util
+package com.github.shanpark.services.util
 
-import io.github.shanpark.services.Service
-import io.github.shanpark.services.coroutine.CoTask
-import io.github.shanpark.services.coroutine.SimpleCoTask
-import io.github.shanpark.services.signal.Signal
-import io.github.shanpark.services.task.SimpleTask
-import io.github.shanpark.services.task.Task
+import com.github.shanpark.services.Service
+import com.github.shanpark.services.coroutine.CoTask
+import com.github.shanpark.services.coroutine.SimpleCoTask
+import com.github.shanpark.services.signal.Signal
+import com.github.shanpark.services.task.SimpleTask
+import com.github.shanpark.services.task.Task
 
 /**
  * 파라미터로 받은 모든 service들이 종료될 때 까지 대기한다.
