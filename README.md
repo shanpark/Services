@@ -83,13 +83,28 @@ service.stop()
 
 To install the library add: 
 
+* Gradle
+
 ```gradle
-repositories { 
-   ...
-   maven { url "https://jitpack.io" }
+repositories {
+    ...
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
-   implementation 'com.github.shanpark:services:0.0.7'
+    implementation 'com.github.shanpark:services:0.0.8'
+}
+```
+
+* Gradle(Kotlin)
+
+```gradle
+repositories { 
+    ...
+    maven { url = uri("https://jitpack.io") }
+}
+
+dependencies {
+    implementation('com.github.shanpark:services:0.0.8')
 }
 ```

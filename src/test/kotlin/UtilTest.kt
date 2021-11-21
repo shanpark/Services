@@ -1,6 +1,7 @@
 import com.github.shanpark.services.ThreadService
+import com.github.shanpark.services.coroutine.CoPool
 import com.github.shanpark.services.coroutine.CoroutineService
-import com.github.shanpark.services.util.EventPool
+import com.github.shanpark.services.util.Pool
 import com.github.shanpark.services.util.await
 import com.github.shanpark.services.util.coTask
 import com.github.shanpark.services.util.task
@@ -100,13 +101,22 @@ internal class UtilTest {
     @Test
     @DisplayName("EventPool 테스트")
     internal fun eventPoolTest() {
-        val eventPool = EventPool(Event::new)
+        val pool = Pool(Event::new)
 
-        var event = eventPool.get()
+        var event = pool.get()
         event.id = 100
-        eventPool.ret(event)
+        pool.ret(event)
 
-        event = eventPool.get()
+        event = pool.get()
+        assertThat(event.id).isEqualTo(100)
+
+        val coPool = CoPool(Event::new)
+
+        event = coPool.get()
+        event.id = 100
+        coPool.ret(event)
+
+        event = coPool.get()
         assertThat(event.id).isEqualTo(100)
     }
 }
