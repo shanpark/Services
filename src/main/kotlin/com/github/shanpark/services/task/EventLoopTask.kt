@@ -27,13 +27,20 @@ class EventLoopTask<T: Any>(
     private val queue: LinkedBlockingQueue<Any> = LinkedBlockingQueue()
 
     /**
-     * EventQueueTask로 Event를 하나 보낸다.
+     * EventLoopTask로 Event를 하나 보낸다.
      * 이 Event가 처리 순서가 되면 즉시 eventHandler가 호출될 것이다.
      *
      * @param event queue로 보내는 event 객체.
      */
     fun sendEvent(event: T) {
         queue.add(event)
+    }
+
+    /**
+     * 현재 큐에 있는 모든 event를 삭제한다.
+     */
+    fun clearEventQueue() {
+        queue.clear()
     }
 
     override fun run(stopSignal: Signal) {

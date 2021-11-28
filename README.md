@@ -11,7 +11,7 @@ val service = SyncService()
 service.start(task) // SyncService는 시작하면 종료될 때 까지 block
 // start()가 리턴되면 service는 종료됨.
 
-    ...
+/* ... */
 
 // 다른 스레드에서 stop()을 요청.
 service.stop()
@@ -30,8 +30,7 @@ if (service.isRunning()) {
 
 service.await() // service가 종료될 때 까지 현재 스레드를 block. 
 
-    ...
-
+/* ... */
 
 // 다른 스레드에서 stop()을 요청.
 service.stop()
@@ -51,8 +50,7 @@ if (service.isRunning()) {
 
 service.await() // service가 종료될 때 까지 현재 스레드를 block. 
 
-    ...
-
+/* ... */
 
 // 다른 스레드에서 stop()을 요청.
 service.stop()
@@ -72,8 +70,7 @@ if (service.isRunning()) {
 
 service.await() // service가 종료될 때 까지 현재 스레드를 block. 
 
-    ...
-
+/* ... */
 
 // 다른 coroutine(suspend function)에서 stop()을 요청.
 service.stop()
@@ -92,7 +89,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.shanpark:services:0.0.8'
+    implementation 'com.github.shanpark:services:0.0.9'
 }
 ```
 
@@ -105,6 +102,6 @@ repositories {
 }
 
 dependencies {
-    implementation('com.github.shanpark:services:0.0.8')
+    implementation('com.github.shanpark:services:0.0.9')
 }
 ```

@@ -38,6 +38,15 @@ class EventLoopCoTask<T: Any>(
         queue.send(event)
     }
 
+    /**
+     * 현재 큐에 있는 모든 event를 삭제한다.
+     */
+    fun clearEventQueue() {
+        do {
+            val result = queue.tryReceive()
+        } while (result.isSuccess)
+    }
+
     override suspend fun run(stopSignal: Signal) {
         while (true) {
             val event = withTimeoutOrNull(timeoutMillis) { queue.receive() }
